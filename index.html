@@ -1,9 +1,13 @@
-﻿<!doctype html>
+﻿<!--本代码来源于网络， 采用离子群算法-->
+
+<!doctype html>
 <html>
+
+
+<!--设置标题-->
 <head>
 <meta charset="utf-8">
-<title>粒子漩涡动画特效</title>
-
+<title>吃饭的个人主页</title>
 <style>
 html,body{
 	margin:0px;
@@ -19,14 +23,17 @@ html,body{
 	height:100%;
 }
 </style>
-
 </head>
-<body>
 
+
+
+
+<body>
 <canvas id="canvas"></canvas>
 
 <script>
-function project3D(x,y,z,vars){
+function project3D(x,y,z,vars)
+{
 
 	var p,d;
 	x-=vars.camX;
@@ -82,6 +89,7 @@ function rgb(col){
 }
 
 
+//此三项用于给方块作色
 function interpolateColors(RGB1,RGB2,degree){
 	
 	var w2=degree;
@@ -109,41 +117,7 @@ function colorString(arr){
 }
 
 
-function process(vars){
-
-
-	if(vars.points.length<vars.initParticles) for(var i=0;i<5;++i) spawnParticle(vars);
-	var p,d,t;
-	
-	p = Math.atan2(vars.camX, vars.camZ);
-	d = Math.sqrt(vars.camX * vars.camX + vars.camZ * vars.camZ);
-	d -= Math.sin(vars.frameNo / 80) / 25;
-	t = Math.cos(vars.frameNo / 300) / 165;
-	vars.camX = Math.sin(p + t) * d;
-	vars.camZ = Math.cos(p + t) * d;
-	vars.camY = -Math.sin(vars.frameNo / 220) * 15;
-	vars.yaw = Math.PI + p + t;
-	vars.pitch = elevation(vars.camX, vars.camZ, vars.camY) - Math.PI / 2;
-	
-	var t;
-	for(var i=0;i<vars.points.length;++i){
-		
-		x=vars.points[i].x;
-		y=vars.points[i].y;
-		z=vars.points[i].z;
-		d=Math.sqrt(x*x+z*z)/1.0075;
-		t=.1/(1+d*d/5);
-		p=Math.atan2(x,z)+t;
-		vars.points[i].x=Math.sin(p)*d;
-		vars.points[i].z=Math.cos(p)*d;
-		vars.points[i].y+=vars.points[i].vy*t*((Math.sqrt(vars.distributionRadius)-d)*2);
-		if(vars.points[i].y>vars.vortexHeight/2 || d<.25){
-			vars.points.splice(i,1);
-			spawnParticle(vars);
-		}
-	}
-}
-
+//画背景
 function drawFloor(vars){
 	
 	var x,y,z,d,point,a;
@@ -233,6 +207,40 @@ function spawnParticle(vars){
 	vars.points.push(pt);	
 }
 
+function process(vars){
+	if(vars.points.length<vars.initParticles) for(var i=0;i<5;++i) spawnParticle(vars);
+	var p,d,t;
+	
+	p = Math.atan2(vars.camX, vars.camZ);
+	d = Math.sqrt(vars.camX * vars.camX + vars.camZ * vars.camZ);
+	d -= Math.sin(vars.frameNo / 80) / 25;
+	t = Math.cos(vars.frameNo / 300) / 165;
+	vars.camX = Math.sin(p + t) * d;
+	vars.camZ = Math.cos(p + t) * d;
+	vars.camY = -Math.sin(vars.frameNo / 220) * 15;
+	vars.yaw = Math.PI + p + t;
+	vars.pitch = elevation(vars.camX, vars.camZ, vars.camY) - Math.PI / 2;
+	
+	var t;
+	for(var i=0;i<vars.points.length;++i){
+		
+		x=vars.points[i].x;
+		y=vars.points[i].y;
+		z=vars.points[i].z;
+		d=Math.sqrt(x*x+z*z)/1.0075;
+		t=.1/(1+d*d/5);
+		p=Math.atan2(x,z)+t;
+		vars.points[i].x=Math.sin(p)*d;
+		vars.points[i].z=Math.cos(p)*d;
+		vars.points[i].y+=vars.points[i].vy*t*((Math.sqrt(vars.distributionRadius)-d)*2);
+		if(vars.points[i].y>vars.vortexHeight/2 || d<.25){
+			vars.points.splice(i,1);
+			spawnParticle(vars);
+		}
+	}
+}
+
+
 function frame(vars) {
 
 	if(vars === undefined){
@@ -275,8 +283,11 @@ function frame(vars) {
 	process(vars);
 	draw(vars);
 }
+
+//主函数
 frame();
 </script>
 </body>
+
 </html>
 
